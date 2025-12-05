@@ -1,0 +1,40 @@
+val permissionLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) {
+            if (it) {
+                val intent = Intent(
+                    Intent.ACTION_PICK,
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                intent.type = "image/*"
+                requestGalleryLauncher.launch(intent)
+            } else {
+                Toast.makeText(this, "permission denied...", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        binding.galleryButton.setOnClickListener {
+
+            if(Build.VERSION.SDK_INT >= 33) {
+                if (ContextCompat.checkSelfPermission(this, "android.permission.READ_MEDIA_IMAGES") == PackageManager.PERMISSION_GRANTED) {
+                    val intent = Intent(
+                        Intent.ACTION_PICK,
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                    intent.type = "image/*"
+                    requestGalleryLauncher.launch(intent)
+                } else {
+                    permissionLauncher.launch("android.permission.READ_MEDIA_IMAGES")
+                }
+
+            }else {
+                if (ContextCompat.checkSelfPermission(this, "android.permission.READ_EXTERNAL_STORAGE") == PackageManager.PERMISSION_GRANTED) {
+                    val intent = Intent(
+                        Intent.ACTION_PICK,
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                    intent.type = "image/*"
+                    requestGalleryLauncher.launch(intent)
+                } else {
+                    permissionLauncher.launch("android.permission.READ_EXTERNAL_STORAGE")
+                }
+            }
+
+        }
